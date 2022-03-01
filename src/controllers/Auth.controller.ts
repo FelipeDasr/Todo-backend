@@ -22,6 +22,7 @@ class AuthenticationController {
             });
         }
 
+        // Trying to create the new user
         const newUserResult = await UserServices.createNewUser(value);
 
         // Checks for an error when trying to create a new user
@@ -107,7 +108,7 @@ class AuthenticationController {
             email, code, newPassword
         );
 
-        if(changePasswordResult instanceof ServiceError){
+        if (changePasswordResult instanceof ServiceError) {
             return res.status(changePasswordResult.code).json({
                 errors: [changePasswordResult.message]
             });

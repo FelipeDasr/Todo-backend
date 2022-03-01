@@ -101,7 +101,12 @@ class UserServices {
                 { tokenToChangePassword: token }
             );
 
-            // sendEmail() needs implementtion
+            // Send reset password email
+            EmailServices.sendResetPasswordEmail(user.email, {
+                firstname: user.firstname,
+                lastname: user.lastname,
+                code
+            });
 
             return {
                 message:

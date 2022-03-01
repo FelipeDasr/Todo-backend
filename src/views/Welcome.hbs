@@ -2,12 +2,44 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .blueStrip {
+            background-color: #4A65FC;
+        }
+
+        .textContainer {
+            padding: 10%;
+            font-size: large;
+            background-color: white;
+        }
+
+        .footer {
+            height: "50vh";
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
-    <p>Welcome {{firstname}} {{lastname}}</p>
+    <div class="container">
+        <div class="blueStrip">
+            <img src="https://i.imgur.com/rTPPBoZ.png" height="80vh" />
+        </div>
+        <div class="textContainer">
+            <h1>Welcome to Todo!</h1>
+            <img src="https://i.imgur.com/kLcwukw.png" height="150vh" align="center" />
+            <p>Hi {{firstname}} {{lastname}}, our team is very happy to have you with us, we hope you can manage your
+                tasks in a simple and productive way. </p>
+        </div>
+        <div class="blueStrip footer">
+            <p>Copyright © Todo, all rights reserved</p>
+        </div>
+    </div>
 </body>
 
 </html>

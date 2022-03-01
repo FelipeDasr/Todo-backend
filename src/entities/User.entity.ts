@@ -26,7 +26,7 @@ export class User {
     @Column({ length: 200, select: false })
     password: string;
 
-    @Column({ length: 200, select: false })
+    @Column({ length: 200, select: false, default: null })
     tokenToChangePassword: string | null;
 
     @CreateDateColumn()
