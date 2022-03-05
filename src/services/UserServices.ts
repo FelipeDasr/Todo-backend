@@ -11,7 +11,6 @@ import { ISimpleMessage } from '../types/CommonTypes';
 
 import { generateRandomNumbersInString, textToHash } from '../utils';
 import EmailServices from './EmailServices';
-import { resolve } from 'path';
 
 class UserServices {
 
