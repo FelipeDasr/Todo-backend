@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 
-export function generateRandomString(size: number): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+export function generateRandomNumbersInString(size: number): string {
+    const chars = '1234567890';
     const charsSize = chars.length;
 
     let randomString = '';

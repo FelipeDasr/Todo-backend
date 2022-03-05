@@ -9,7 +9,7 @@ import bcrypt from 'bcryptjs';
 import { IUserRecord, IFullUserRecord, IUser, } from '../types/UserTypes';
 import { ISimpleMessage } from '../types/CommonTypes';
 
-import { generateRandomString, textToHash } from '../utils';
+import { generateRandomNumbersInString, textToHash } from '../utils';
 import EmailServices from './EmailServices';
 
 class UserServices {
@@ -93,7 +93,7 @@ class UserServices {
             const user = await this.getUserRecordByEmail(email);
             if (user instanceof ServiceError) return user;
 
-            const code = generateRandomString(5);
+            const code = generateRandomNumbersInString(5);
             const token = JwtTokenServices.generateTokenToChangePassword(code);
 
             await this.userRepository.update(
