@@ -66,6 +66,20 @@ class AuthenticationController {
         });
     }
 
+    public async checkIfTheEmailExists(req: Request, res: Response): Promise<Response> {
+        // Email validation
+        const value = UserValidator.email(req.query);
+        // Check errors
+        if(value instanceof ValidationError){
+            return res.status(422).json({
+                errors: value.errors
+            });
+        }
+        //
+        const emailResult = await UserServices.checkIfTheEmailExists(value.email);
+        return res.status(200).json(emailResult);
+    }
+
     public async forgotPassword(req: Request, res: Response) {
 
         // Checks the email
