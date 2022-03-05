@@ -11,6 +11,7 @@ import { ISimpleMessage } from '../types/CommonTypes';
 
 import { generateRandomNumbersInString, textToHash } from '../utils';
 import EmailServices from './EmailServices';
+import { resolve } from 'path';
 
 class UserServices {
 
@@ -31,17 +32,14 @@ class UserServices {
         ]
     }
 
-    public async createNewUser(user: IUser): (
-        Promise<IUserRecord | ServiceError>
-    ) {
+    public async createNewUser(user: IUser): Promise<IUserRecord | ServiceError> {
         try {
             // Searching the same email in database
-            const userAlreadyExist = await this.userRepository.findOne({
-                where: { email: user.email }
-            });
+            const userAlreadyExist = await this.checkIfTheEmailExists(user.email);
+            if (userAlreadyExist instanceof ServiceError) return userAlreadyExist; // Check errors
 
             // Errors checking
-            if (userAlreadyExist) {
+            if (userAlreadyExist.exists) {
                 return new ServiceError('E-mail is already in use', 400);
             }
 
@@ -55,7 +53,7 @@ class UserServices {
                 firstname: newUser.firstname,
                 lastname: newUser.lastname
             });
-            
+
             return this.userReturn(newUser);
         }
         catch (e) {
@@ -86,9 +84,7 @@ class UserServices {
         }
     }
 
-    public async forgotPassword(email: string): (
-        Promise<ISimpleMessage | ServiceError>
-    ) {
+    public async forgotPassword(email: string): Promise<ISimpleMessage | ServiceError> {
         try {
             const user = await this.getUserRecordByEmail(email);
             if (user instanceof ServiceError) return user;
@@ -114,7 +110,6 @@ class UserServices {
             }
         }
         catch (e) {
-            console.log(e);
             return new ServiceError(
                 'Error when trying to generate the code to change password', 500
             );
@@ -128,7 +123,7 @@ class UserServices {
             const user = await this.getUserRecordByEmail(email);
             if (user instanceof ServiceError) return user;
 
-            if(!user.tokenToChangePassword){
+            if (!user.tokenToChangePassword) {
                 return new ServiceError('Make a request to change the password', 400);
             }
 
@@ -143,7 +138,7 @@ class UserServices {
             );
 
             // Update user
-            await this.userRepository.update({ email }, { 
+            await this.userRepository.update({ email }, {
                 password: textToHash(newPassword),
                 tokenToChangePassword: null
             });
@@ -155,24 +150,35 @@ class UserServices {
         }
     }
 
-    public async getUserById(id: string): (
-        Promise<IUserRecord | ServiceError>
-    ) {
-        try{
+    public async getUserById(id: string): Promise<IUserRecord | ServiceError> {
+        try {
             // Get user
             const user = await this.userRepository.findOne(id);
             //
-            if (!user)return new ServiceError('User does not exist', 500);
+            if (!user) return new ServiceError('User does not exist', 500);
             return user;
         }
-        catch(e){
+        catch (e) {
             return new ServiceError('Error when trying to verify the user', 500);
         }
     }
 
-    private async getUserRecordByEmail(email: string): (
-        Promise<IFullUserRecord | ServiceError>
+    public async checkIfTheEmailExists(email: string): (
+        Promise<{ exists: boolean } | ServiceError>
     ) {
+        try {
+            // Get user
+            const user = await this.userRepository.findOne({ email });
+            //
+            if (!user) return { exists: false }
+            return { exists: true }
+        }
+        catch (e) {
+            return new ServiceError('Error when trying to verify email', 500);
+        }
+    }
+
+    private async getUserRecordByEmail(email: string): Promise<IFullUserRecord | ServiceError> {
         try {
             const user = await this.userRepository.findOne({
                 where: { email },
