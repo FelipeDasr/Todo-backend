@@ -16,4 +16,6 @@ authenticationRouter.post('/signin', AuthController.signin);
 authenticationRouter.post('/forgot-password', ForgotPasswordLimiter, AuthController.forgotPassword);
 authenticationRouter.post('/change-password', ChangePasswordLimiter, AuthController.changePassword);
 
+authenticationRouter.get('/email-exists', AuthController.checkIfTheEmailExists);
+
 export { authenticationRouter }
