@@ -4,7 +4,7 @@ const ChangePasswordLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
     standardHeaders: true,
     legacyHeaders: false,
-    max: 3,
+    max: 1,
     message: { errors: ["Too many requests, please try again later!"] }
 });
 
