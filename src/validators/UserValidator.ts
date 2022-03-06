@@ -38,8 +38,8 @@ class UserValidator extends Validator {
         return this.validate(data, 'required', { email: this.schema.email });
     }
 
-    public emailAndCode(data: any) {
-        return this.validate(data, 'required', { 
+    public emailAndCode(data: any): ({ email: string, code: string } | ValidationError) {
+        return this.validate(data, 'required', {
             email: this.schema.email,
             code: Joi.string().length(5)
         });
