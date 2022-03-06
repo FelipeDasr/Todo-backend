@@ -70,7 +70,7 @@ class AuthenticationController {
         // Email validation
         const value = UserValidator.email(req.query);
         // Check errors
-        if(value instanceof ValidationError){
+        if (value instanceof ValidationError) {
             return res.status(422).json({
                 errors: value.errors
             });
@@ -103,6 +103,30 @@ class AuthenticationController {
         }
 
         return res.status(200).json(forgotPasswordResult);
+    }
+
+    public async checkIfPasswordResetCodeIsCorrect(req: Request, res: Response) {
+
+        // Checks request query
+        const value = UserValidator.emailAndCode(req.query);
+        // Check errors
+        if (value instanceof ValidationError) {
+            return res.status(422).json({
+                errors: value.errors
+            });
+        }
+        // Get value
+        const { email, code } = value;
+
+        const result = await UserServices.checkIfPasswordResetCodeIsCorrect(
+            email, code
+        );
+        // Check errors
+        if (result instanceof ServiceError) {
+            return res.status(200).json({ isCorrect: false });
+        }
+
+        return res.status(200).json({ isCorrect: true });
     }
 
     public async changePassword(req: Request, res: Response) {
