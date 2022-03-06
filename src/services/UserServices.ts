@@ -115,26 +115,41 @@ class UserServices {
         }
     }
 
+    public async checkIfPasswordResetCodeIsCorrect(email: string, code: string): (
+        Promise<true | ServiceError>
+    ) {
+        try {
+            const userResult = await this.getUserRecordByEmail(email);
+            if (userResult instanceof ServiceError) return userResult;
+
+            // Get token
+            const { tokenToChangePassword } = userResult;
+            // Check if the token exists
+            if (!tokenToChangePassword) {
+                return new ServiceError('Make a request to change the password', 400);
+            }
+
+            // Check the code inside the token payload
+            const isTheSameCodeResult = JwtTokenServices.isTheSameCode(code, tokenToChangePassword);
+
+            if (isTheSameCodeResult instanceof ServiceError) return isTheSameCodeResult;
+            return true
+        }
+        catch (e) {
+            return new ServiceError('Error when trying to verify the password reset code', 500);
+        }
+    }
+
     public async changePassword(email: string, code: string, newPassword: string): (
         Promise<ISimpleMessage | ServiceError>
     ) {
         try {
-            const user = await this.getUserRecordByEmail(email);
-            if (user instanceof ServiceError) return user;
-
-            if (!user.tokenToChangePassword) {
-                return new ServiceError('Make a request to change the password', 400);
-            }
-
             // Checks if the code is correct
-            const isTheSameCode = JwtTokenServices.isTheSameCode(
-                code, user.tokenToChangePassword
+            const codeIsCorrectResult = await this.checkIfPasswordResetCodeIsCorrect(
+                email, code
             );
-
             // Verify errors
-            if (isTheSameCode instanceof ServiceError) return new ServiceError(
-                isTheSameCode.message, isTheSameCode.code
-            );
+            if (codeIsCorrectResult instanceof ServiceError) return codeIsCorrectResult;
 
             // Update user
             await this.userRepository.update({ email }, {
