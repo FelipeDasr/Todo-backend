@@ -154,7 +154,7 @@ class UserServices {
             // Get user
             const user = await this.userRepository.findOne(id);
             //
-            if (!user) return new ServiceError('User does not exist', 500);
+            if (!user) return new ServiceError('User does not exist', 400);
             return user;
         }
         catch (e) {
@@ -184,7 +184,7 @@ class UserServices {
                 select: this.allUserProperties
             });
 
-            if (!user) return new ServiceError('User does not exist', 500);
+            if (!user) return new ServiceError('User does not exist', 400);
             return user;
         }
         catch (e) {
