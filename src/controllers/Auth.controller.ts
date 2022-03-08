@@ -36,7 +36,7 @@ class AuthenticationController {
     }
 
     public async signin(req: Request, res: Response): Promise<Response> {
-        console.log('HERE')
+        
         // Body validation
         const value = UserValidator.userSignin(req.body);
 
