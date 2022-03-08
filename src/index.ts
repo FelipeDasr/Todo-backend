@@ -8,10 +8,13 @@ import DBConnection from './database';
 import express from 'express';
 const app = express();
 
+import cors from 'cors';
+
 DBConnection.then(async connection => {
 
     const { router } = await import('./routes');
 
+    app.use(cors());
     app.use(express.json());
     app.use(router);
 
