@@ -13,9 +13,9 @@ class UserValidator extends Validator {
     constructor() {
         super();
         this.schema = {
-            firstname: Joi.string().min(2).max(50),
-            lastname: Joi.string().min(2).max(50),
-            email: Joi.string().email().max(100),
+            firstname: Joi.string().trim().min(2).max(50),
+            lastname: Joi.string().trim().min(2).max(50),
+            email: Joi.string().trim().email().max(100),
             password: Joi.string().min(6).max(200)
         }
     }
