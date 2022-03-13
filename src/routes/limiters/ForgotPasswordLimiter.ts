@@ -5,7 +5,7 @@ const ForgotPasswordLimiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
     max: 1,
-    message: { errors: ["Too many requests, please try again later!"] }
+    message: { errors: ["Too many requests to change password, try again later."] }
 });
 
 export { ForgotPasswordLimiter } 
