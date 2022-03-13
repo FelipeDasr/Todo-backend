@@ -5,7 +5,6 @@ import AuthController from '../controllers/Auth.controller';
 
 // Limiters
 
-import { CodeVeficationLimiter } from './limiters/CodeVerificationLimiter';
 import { ChangePasswordLimiter } from './limiters/ChangePasswordLimiter';
 import { ForgotPasswordLimiter } from './limiters/ForgotPasswordLimiter';
 
@@ -20,7 +19,6 @@ authenticationRouter.post('/change-password', ChangePasswordLimiter, AuthControl
 authenticationRouter.get('/email-exists', AuthController.checkIfTheEmailExists);
 
 authenticationRouter.get('/password-reset-code/is-correct',
-    CodeVeficationLimiter,
     AuthController.checkIfPasswordResetCodeIsCorrect
 );
 
