@@ -14,7 +14,7 @@ class JwtTokenServices {
 
     public generateTokenToChangePassword(code: string) {
         return jwt.sign(
-            { code }, process.env.API_TOKEN, { expiresIn: '3m' }
+            { code }, process.env.API_TOKEN, { expiresIn: '5m' }
         );
     }
 
