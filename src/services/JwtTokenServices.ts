@@ -56,7 +56,6 @@ class JwtTokenServices {
                 return new ServiceError('Inactive token', 401);
 
             default:
-                console.log('HERE 4321')
                 return new ServiceError('Invalid token', 401);
         }
     }
