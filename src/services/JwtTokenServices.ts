@@ -12,6 +12,11 @@ class JwtTokenServices {
         );
     }
 
+    public generateRefreshToken(userId: string): string {
+
+        return '';
+    }
+
     public generateTokenToChangePassword(code: string) {
         return jwt.sign(
             { code }, process.env.API_TOKEN, { expiresIn: '5m' }
