@@ -4,7 +4,7 @@ import { ServiceError } from '../classes/ServiceError';
 
 class JwtTokenServices {
 
-    public generateAuthenticationToken(userId: string): string {
+    public generateAccessToken(userId: string): string {
         return jwt.sign(
             { id: userId },
             process.env.API_SECRET_TOKEN,
