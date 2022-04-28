@@ -7,7 +7,7 @@ class JwtTokenServices {
     public generateAuthenticationToken(userId: string): string {
         return jwt.sign(
             { id: userId },
-            process.env.API_TOKEN,
+            process.env.API_SECRET_TOKEN,
             { expiresIn: '24h' }
         );
     }
@@ -19,7 +19,7 @@ class JwtTokenServices {
 
     public generateTokenToChangePassword(code: string) {
         return jwt.sign(
-            { code }, process.env.API_TOKEN, { expiresIn: '5m' }
+            { code }, process.env.API_SECRET_TOKEN, { expiresIn: '5m' }
         );
     }
 
@@ -27,7 +27,7 @@ class JwtTokenServices {
         let serviceError: ServiceError;
 
         // Checks if the code is the same inside of the payload
-        jwt.verify(token, process.env.API_TOKEN, (err, payload: { code: string }) => {
+        jwt.verify(token, process.env.API_SECRET_TOKEN, (err, payload: { code: string }) => {
             if (err) {
                 serviceError = this.getJwtError(err);
                 return;
@@ -41,7 +41,7 @@ class JwtTokenServices {
         let serviceError: ServiceError;
         let userId: string;
 
-        jwt.verify(token, process.env.API_TOKEN, (err, payload: { id: string }) => {
+        jwt.verify(token, process.env.API_SECRET_TOKEN, (err, payload: { id: string }) => {
             if (err) return serviceError = this.getJwtError(err);
             userId = payload.id;
         });
