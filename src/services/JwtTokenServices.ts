@@ -13,8 +13,11 @@ class JwtTokenServices {
     }
 
     public generateRefreshToken(userId: string): string {
-
-        return '';
+        return jwt.sign(
+            { id: userId },
+            process.env.REFRESH_RECRET_TOKEN,
+            { expiresIn: '30d' }
+        );
     }
 
     public generateTokenToChangePassword(code: string) {
