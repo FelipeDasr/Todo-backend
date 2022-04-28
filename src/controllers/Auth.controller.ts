@@ -58,11 +58,13 @@ class AuthenticationController {
             });
         }
 
-        const token = JwtTokenServices.generateAuthenticationToken(userResult.id);
+        const accessToken = JwtTokenServices.generateAccessToken(userResult.id);
+        const refreshToken = JwtTokenServices.generateRefreshToken(userResult.id);
 
         res.status(200).json({
             user: userResult,
-            token
+            accessToken,
+            refreshToken
         });
     }
 
