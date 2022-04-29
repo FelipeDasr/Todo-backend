@@ -68,6 +68,17 @@ class AuthenticationController {
         });
     }
 
+    public async getNewAccessToken(req: Request, res: Response): Promise<Response> {
+        // RefreshToken value
+        const refreshTokenValue = req.body.refreshToken;
+        // Check if the refresh token exist
+        if (!refreshTokenValue) {
+            return res.status(422).json({
+                errors: ['"refreshToken" is required']
+            });
+        }
+    }
+
     public async checkIfTheEmailExists(req: Request, res: Response): Promise<Response> {
         // Email validation
         const value = UserValidator.email(req.query);
