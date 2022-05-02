@@ -40,7 +40,7 @@ class JwtTokenServices {
         return serviceError ? serviceError : true;
     }
 
-    public getUserIdByAccessToken(token: string): string | ServiceError {
+    public getUserIdByToken(token: string): string | ServiceError {
         let serviceError: ServiceError;
         let userId: string;
 
