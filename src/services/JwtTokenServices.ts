@@ -40,11 +40,13 @@ class JwtTokenServices {
         return serviceError ? serviceError : true;
     }
 
-    public getUserIdByToken(token: string): string | ServiceError {
+    public getUserIdByToken(token: string, secret: string = process.env.API_SECRET_TOKEN): (
+        string | ServiceError
+    ) {
         let serviceError: ServiceError;
         let userId: string;
 
-        jwt.verify(token, process.env.API_SECRET_TOKEN, (err, payload: { id: string }) => {
+        jwt.verify(token, secret, (err, payload: { id: string }) => {
             if (err) return serviceError = this.getJwtError(err);
             userId = payload.id;
         });
