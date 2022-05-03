@@ -7,6 +7,7 @@ import { ServiceError } from '../classes/ServiceError';
 
 import JwtTokenServices from '../services/JwtTokenServices';
 import UserServices from '../services/UserServices';
+import { IUserRecord } from '../types/UserTypes';
 
 class AuthenticationController {
 
@@ -36,7 +37,7 @@ class AuthenticationController {
     }
 
     public async signin(req: Request, res: Response): Promise<Response> {
-        
+
         // Body validation
         const value = UserValidator.userSignin(req.body);
 
@@ -69,14 +70,17 @@ class AuthenticationController {
     }
 
     public async getNewAccessToken(req: Request, res: Response): Promise<Response> {
-        // RefreshToken value
-        const refreshTokenValue = req.body.refreshToken;
-        // Check if the refresh token exist
-        if (!refreshTokenValue) {
-            return res.status(422).json({
-                errors: ['"refreshToken" is required']
-            });
-        }
+        // Get the user
+        const user: IUserRecord = res.locals.user;
+
+        // Generate the tokens
+        const accessToken = JwtTokenServices.generateAccessToken(user.id);
+        const refreshToken = JwtTokenServices.generateRefreshToken(user.id);
+
+        return res.status(200).json({
+            accessToken,
+            refreshToken
+        });
     }
 
     public async checkIfTheEmailExists(req: Request, res: Response): Promise<Response> {
