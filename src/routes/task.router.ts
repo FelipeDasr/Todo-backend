@@ -3,13 +3,15 @@ const taskRouter = Router();
 
 import TaskController from '../controllers/Task.controller';
 
-taskRouter.post('/task', TaskController.newTask);
+import { authChecker } from '../middlewares/authChecker'
 
-taskRouter.get('/tasks_of_the_year', TaskController.getTasksOfTheYear);
-taskRouter.get('/tasks_of_the_month', TaskController.getTasksOfTheMonth);
-taskRouter.get('/tasks_of_the_day', TaskController.getTasksOfTheDay);
+taskRouter.post('/task', authChecker, TaskController.newTask);
 
-taskRouter.patch('/task/update', TaskController.updateTask);
-taskRouter.delete('/task/delete/:taskId', TaskController.deleteTask);
+taskRouter.get('/tasks_of_the_year', authChecker, TaskController.getTasksOfTheYear);
+taskRouter.get('/tasks_of_the_month', authChecker, TaskController.getTasksOfTheMonth);
+taskRouter.get('/tasks_of_the_day', authChecker, TaskController.getTasksOfTheDay);
+
+taskRouter.patch('/task/update', authChecker, TaskController.updateTask);
+taskRouter.delete('/task/delete/:taskId', authChecker, TaskController.deleteTask);
 
 export { taskRouter }
