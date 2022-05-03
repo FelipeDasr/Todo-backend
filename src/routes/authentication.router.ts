@@ -8,10 +8,16 @@ import AuthController from '../controllers/Auth.controller';
 import { ChangePasswordLimiter } from './limiters/ChangePasswordLimiter';
 import { ForgotPasswordLimiter } from './limiters/ForgotPasswordLimiter';
 
+// Middleware
+
+import { refreshTokenChecker } from '../middlewares//refreshTokenChecker';
+
 // Routes
 
 authenticationRouter.post('/signup', AuthController.signup);
 authenticationRouter.post('/signin', AuthController.signin);
+
+authenticationRouter.post('/refresh-token', refreshTokenChecker, AuthController.getNewAccessToken);
 
 authenticationRouter.post('/forgot-password', ForgotPasswordLimiter, AuthController.forgotPassword);
 authenticationRouter.post('/change-password', ChangePasswordLimiter, AuthController.changePassword);
