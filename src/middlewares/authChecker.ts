@@ -33,8 +33,8 @@ export async function authChecker(req: Request, res: Response, next: NextFunctio
 
         if(userResult instanceof ServiceError){
             return res.status(401).json({
-                errors: [`Token validation error: ${userResult.message}`]
-            })
+                errors: [`Access token validation error: ${userResult.message}`]
+            });
         }
 
         // Defining the user who made the request
