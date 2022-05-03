@@ -38,7 +38,7 @@ export async function authChecker(req: Request, res: Response, next: NextFunctio
         }
 
         // Defining the user who made the request
-        res.locals.user = await UserServices.getUserById(userId);
+        res.locals.user = userResult;
 
         return next();
     }
