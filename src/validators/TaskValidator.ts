@@ -40,7 +40,7 @@ class TaskValidator extends Validator {
     }
 
     //
-    public deleteTask(data: any): { taskId: string } | ValidationError {
+    public taskId(data: any): { taskId: string } | ValidationError {
         return this.validate(data, 'required', {
             taskId: Joi.string().uuid({ version: ['uuidv4'] })
         });

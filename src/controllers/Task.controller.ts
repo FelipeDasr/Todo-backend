@@ -133,7 +133,7 @@ class TaskController {
     public async deleteTask(req: Request, res: Response): Promise<Response> {
 
         // Body validation
-        const value = TaskValidator.deleteTask(req.params);
+        const value = TaskValidator.taskId(req.params);
         // Checks the validation result
         if (value instanceof ValidationError) {
             return res.status(422).json({ errors: value.errors });
