@@ -107,6 +107,10 @@ class TaskController {
         return res.status(200).json(tasksResult);
     }
 
+    public async getTaskById(req: Request, res: Response) {
+
+    }
+
     public async updateTask(req: Request, res: Response): Promise<Response> {
 
         // Body validation
