@@ -12,6 +12,8 @@ taskRouter.get('/tasks_of_the_year', authChecker, TaskController.getTasksOfTheYe
 taskRouter.get('/tasks_of_the_month', authChecker, TaskController.getTasksOfTheMonth);
 taskRouter.get('/tasks_of_the_day', authChecker, TaskController.getTasksOfTheDay);
 
+taskRouter.get('/tasks-stats', authChecker, TaskController.getTasksStatistics);
+
 taskRouter.patch('/task/update', authChecker, TaskController.updateTask);
 taskRouter.delete('/task/delete/:taskId', authChecker, TaskController.deleteTask);
 
