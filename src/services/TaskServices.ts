@@ -182,7 +182,7 @@ class TaskServices {
         }
     }
 
-    public async deleteAllTasks(user: IUserRecord): Promise<IDeleteResponse | ServiceError> {
+    public async deleteAllUserTasks(user: IUserRecord): Promise<IDeleteResponse | ServiceError> {
         try {
             // Delete all tasks
             const result = await this.taskRepository.delete({ user });
