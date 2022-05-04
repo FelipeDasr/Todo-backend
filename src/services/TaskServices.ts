@@ -211,6 +211,22 @@ class TaskServices {
         }
     }
 
+    public async getTaskById(taskId: string): Promise<ITaskRecord | ServiceError> {
+        try {
+            // Get task
+            const task = await this.taskRepository.findOne(taskId);
+            // Check if the task exist
+            if (!task) {
+                return new ServiceError('Task does not exist', 400);
+            }
+
+            return task;
+        }
+        catch (e) {
+            return new ServiceError('Error when trying to get the task', 500);
+        }
+    }
+
     private getTasksOrganizedByMonth(tasks: ITaskRecord[]): IOrganizedTaskRecordByMonth | [] {
 
         if (!tasks.length) return [];
