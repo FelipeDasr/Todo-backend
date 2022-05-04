@@ -1,12 +1,11 @@
 import {
     TValidationErrorsResult,
-    IValidationResult,
     TPresence
 } from '../types/ValidatorTypes';
 
 import { ValidationError } from '../classes/ValidationError';
 
-import Joi, { date } from 'joi';
+import Joi from 'joi';
 
 export class Validator {
 
