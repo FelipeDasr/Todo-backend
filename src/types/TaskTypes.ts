@@ -66,3 +66,11 @@ export interface ITaskResponseOrganizedByDay extends ITotalRecords {
 export interface ITaskResponseOrganizedByMonth extends ITotalRecords {
     tasks: IOrganizedTaskRecordByMonth | [];
 }
+
+export interface ITaskStatistics {
+    tasks: number;
+    completedTasks: number;
+    incompleteTasks: number;
+    percentageOfCompletedTasks: number;
+    percentageOfIncompleteTasks: number;
+}
