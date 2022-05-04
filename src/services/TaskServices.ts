@@ -5,6 +5,7 @@ import {
     ITaskResponseOrganizedByMonth,
     IOrganizedTaskRecordByMonth,
     ITaskResponseOrganizedByDay,
+    IDeleteAllTasksResponse,
     IOrganizedTaskRecord,
     ITaskDateAndUser,
     IFullTaskRecord,
@@ -16,9 +17,10 @@ import {
     ITaskInfo,
     ITask,
 } from '../types/TaskTypes';
-import { IQueryByYear, ISimpleTaskQuery } from '../types/QueryTypes';
 
+import { IQueryByYear, ISimpleTaskQuery } from '../types/QueryTypes';
 import { ISimpleMessage } from '../types/CommonTypes';
+import { IUserRecord } from '../types/UserTypes';
 import { ServiceError } from '../classes/ServiceError';
 
 import moment from 'moment';
@@ -178,6 +180,19 @@ class TaskServices {
         }
         catch (e) {
             return new ServiceError('Error when trying to delete task', 500);
+        }
+    }
+
+    public async deleteAllTasks(user: IUserRecord): Promise<IDeleteAllTasksResponse | ServiceError> {
+        try {
+            // Delete all tasks
+            const result = await this.taskRepository.delete({ user });
+            return {
+                affected: result.affected
+            }
+        }
+        catch (e) {
+            return new ServiceError('Error when trying to delete all tasks', 500);
         }
     }
 
