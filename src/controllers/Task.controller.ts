@@ -95,7 +95,6 @@ class TaskController {
 
         // Get data
         const user = res.locals.user; // Get user
-        const date = value.date;
 
         const tasksResult = await TaskServices.getTasksOfTheYear({ user }, queryValue);
 
@@ -108,7 +107,25 @@ class TaskController {
     }
 
     public async getTaskById(req: Request, res: Response) {
+        // Check params
+        const value = TaskValidator.taskId(req.params);
+        // Check errors
+        if (value instanceof ValidationError){
+            return res.status(422).json({
+                errors: value.errors
+            });
+        }
 
+        // Get task
+        const taskResult = await TaskServices.getTaskById(value.taskId);
+        // Check errors
+        if (taskResult instanceof ServiceError){
+            return res.status(taskResult.code).json({
+                errors: [taskResult.message]
+            });
+        }
+
+        return res.status(200).json(taskResult);
     }
 
     public async updateTask(req: Request, res: Response): Promise<Response> {
