@@ -51,10 +51,6 @@ export interface ITasksResponse extends ITotalRecords {
     tasks: ITaskRecord[];
 }
 
-export interface IDeleteAllTasksResponse {
-    affected: number;
-}
-
 export interface IOrganizedTaskRecord {
     [key: string]: ITaskRecord[];
 }
