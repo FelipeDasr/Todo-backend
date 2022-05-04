@@ -5,7 +5,6 @@ import {
     ITaskResponseOrganizedByMonth,
     IOrganizedTaskRecordByMonth,
     ITaskResponseOrganizedByDay,
-    IDeleteAllTasksResponse,
     IOrganizedTaskRecord,
     ITaskDateAndUser,
     IFullTaskRecord,
@@ -19,7 +18,7 @@ import {
 } from '../types/TaskTypes';
 
 import { IQueryByYear, ISimpleTaskQuery } from '../types/QueryTypes';
-import { ISimpleMessage } from '../types/CommonTypes';
+import { IDeleteResponse, ISimpleMessage } from '../types/CommonTypes';
 import { IUserRecord } from '../types/UserTypes';
 import { ServiceError } from '../classes/ServiceError';
 
@@ -183,7 +182,7 @@ class TaskServices {
         }
     }
 
-    public async deleteAllTasks(user: IUserRecord): Promise<IDeleteAllTasksResponse | ServiceError> {
+    public async deleteAllTasks(user: IUserRecord): Promise<IDeleteResponse | ServiceError> {
         try {
             // Delete all tasks
             const result = await this.taskRepository.delete({ user });
