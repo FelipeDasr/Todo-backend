@@ -7,7 +7,7 @@ import JwtTokenServices from './JwtTokenServices';
 import bcrypt from 'bcryptjs';
 
 import { IUserRecord, IFullUserRecord, IUser, } from '../types/UserTypes';
-import { ISimpleMessage } from '../types/CommonTypes';
+import { IDeleteResponse, ISimpleMessage } from '../types/CommonTypes';
 
 import { generateRandomNumbersInString, textToHash } from '../utils';
 import EmailServices from './EmailServices';
@@ -192,6 +192,18 @@ class UserServices {
         }
     }
 
+    public async deleteUser(id: string): Promise<IDeleteResponse | ServiceError> {
+        try {
+            // Delete user
+            const deletedUserResult = await this.userRepository.delete({ id });
+            const { affected } = deletedUserResult;
+            return { affected };
+        }
+        catch (e) {
+            return new ServiceError('Error when trying to delete user', 500);
+        }
+    }
+    
     private async getUserRecordByEmail(email: string): Promise<IFullUserRecord | ServiceError> {
         try {
             const user = await this.userRepository.findOne({
