@@ -1,4 +1,9 @@
-import { Repository, getRepository, Between } from 'typeorm';
+import {
+    Repository,
+    getRepository,
+    Between,
+    LessThan
+} from 'typeorm';
 import { Task } from '../entities/Task.entity';
 
 import {
@@ -15,6 +20,7 @@ import {
     ITaskUser,
     ITaskInfo,
     ITask,
+    ITaskStatistics,
 } from '../types/TaskTypes';
 
 import { IQueryByYear, ISimpleTaskQuery } from '../types/QueryTypes';
@@ -238,6 +244,41 @@ class TaskServices {
         }
         catch (e) {
             return new ServiceError('Error when trying to get the task', 500);
+        }
+    }
+
+    public async getTaskStats(user: IUserRecord): Promise<ITaskStatistics | ServiceError> {
+        try {
+            // Count all tasks
+            const allTasks = await this.taskRepository.count({ user });
+            // Count all completed tasks
+            const completedTasks = await this.taskRepository.count({
+                user, done: true
+            });
+
+            // Date limit
+            const dateNow = moment().subtract(1, 'day').endOf('day');
+
+            // Count all imcomplete tasks
+            const incompleteTasks = await this.taskRepository.count({
+                user,
+                done: false,
+                dueDate: LessThan(dateNow.toDate())
+            });
+
+            const percentageOfCompletedTasks = (completedTasks * 100) / allTasks;
+            const percentageOfIncompleteTasks = (incompleteTasks * 100) / allTasks;
+
+            return {
+                tasks: allTasks,
+                completedTasks,
+                incompleteTasks,
+                percentageOfCompletedTasks,
+                percentageOfIncompleteTasks
+            }
+        }
+        catch (e) {
+            return new ServiceError('Error when trying to get the task statistics', 500);
         }
     }
 
