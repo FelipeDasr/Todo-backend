@@ -110,7 +110,7 @@ class TaskController {
         // Check params
         const value = TaskValidator.taskId(req.params);
         // Check errors
-        if (value instanceof ValidationError){
+        if (value instanceof ValidationError) {
             return res.status(422).json({
                 errors: value.errors
             });
@@ -119,13 +119,28 @@ class TaskController {
         // Get task
         const taskResult = await TaskServices.getTaskById(value.taskId);
         // Check errors
-        if (taskResult instanceof ServiceError){
+        if (taskResult instanceof ServiceError) {
             return res.status(taskResult.code).json({
                 errors: [taskResult.message]
             });
         }
 
         return res.status(200).json(taskResult);
+    }
+
+    public async getTasksStatistics(req: Request, res: Response): Promise<Response> {
+        // Get user
+        const user: IUserRecord = res.locals.user;
+        // Get statistics
+        const tasksStatsResult = await TaskServices.getTaskStats(user);
+        // Check errors
+        if (tasksStatsResult instanceof ServiceError) {
+            return res.status(tasksStatsResult.code).json({
+                errors: [tasksStatsResult.message]
+            });
+        }
+
+        return res.status(200).json(tasksStatsResult);
     }
 
     public async updateTask(req: Request, res: Response): Promise<Response> {
