@@ -8,6 +8,13 @@ import { IUserRecord } from '../types/UserTypes';
 import { ServiceError } from '../classes/ServiceError';
 
 class UserController {
+
+    public async getUserInfo(req: Request, res: Response): Promise<Response>{
+        // Get user
+        const user: IUserRecord = res.locals.user;
+        return res.status(200).json({user});
+    }
+
     public async deleteUser(req: Request, res: Response): Promise<Response> {
         // Get user
         const user: IUserRecord = res.locals.user;
