@@ -9,10 +9,16 @@ import { ServiceError } from '../classes/ServiceError';
 
 class UserController {
 
-    public async getUserInfo(req: Request, res: Response): Promise<Response>{
+    public async getUserInfo(req: Request, res: Response): Promise<Response> {
         // Get user
         const user: IUserRecord = res.locals.user;
-        return res.status(200).json({user});
+        // Get user tasks statistics
+        const tasksStats = await TaskServices.getTaskStats(user);
+
+        return res.status(200).json({
+            user,
+            tasksStats
+        });
     }
 
     public async deleteUser(req: Request, res: Response): Promise<Response> {
@@ -22,7 +28,7 @@ class UserController {
         // Delete all user tasks
         const deleteAllUserTasksResult = await TaskServices.deleteAllUserTasks(user);
         // Check errors
-        if (deleteAllUserTasksResult instanceof ServiceError){
+        if (deleteAllUserTasksResult instanceof ServiceError) {
             return res.status(deleteAllUserTasksResult.code).json({
                 errors: [deleteAllUserTasksResult.message]
             });
@@ -31,7 +37,7 @@ class UserController {
         // Delete user
         const deleteUserResult = await UserServices.deleteUser(user.id);
         // Check errors
-        if (deleteUserResult instanceof ServiceError){
+        if (deleteUserResult instanceof ServiceError) {
             return res.status(deleteUserResult.code).json({
                 errors: [deleteUserResult.message]
             });
