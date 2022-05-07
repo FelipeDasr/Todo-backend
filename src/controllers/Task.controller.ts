@@ -85,11 +85,8 @@ class TaskController {
     public async getTasksOfTheYear(req: Request, res: Response) {
         // Data validation
         const queryValue = QueryValidator.queryByYear(req.query); // Filters validation
-        const value = TaskValidator.date(req.query);     // Query validation
 
         // Checks the validation result
-        if (value instanceof ValidationError)
-            return res.status(422).json({ errors: value.errors });
         if (queryValue instanceof ValidationError)
             return res.status(422).json({ errors: queryValue.errors });
 
