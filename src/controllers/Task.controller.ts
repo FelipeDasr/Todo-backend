@@ -31,7 +31,7 @@ class TaskController {
             });
         }
         //
-        return res.status(200).json(newTaskResult);
+        return res.status(201).json(newTaskResult);
     }
 
     public async getTasksOfTheDay(req: Request, res: Response) {
