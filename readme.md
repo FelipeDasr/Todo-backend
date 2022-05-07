@@ -19,11 +19,14 @@ Caso tudo ocorra com sucesso a saida deverá ser:
 
     [OK] CONNECTION TO DATABASE SUCCESSFUL
 
-# SignUp
+# Autenticação
+## SignUp
 
-| Rota          | Método     |
-|---------------|------------|
-| **`/signup`** | **`POST`** |
+Criar uma conta na aplicação.
+
+| Rota          | Método     | Autenticação |
+|---------------|------------|--------------|
+| **`/signup`** | **`POST`** | **`NÃO`**    |
 
 
 **Parâmetros obrigatórios**
@@ -36,6 +39,8 @@ Caso tudo ocorra com sucesso a saida deverá ser:
 | **`password`**  | **`string`** | body  | Senha da nova conta      |
 
 **Exemplo de requisição**
+
+**`POST`** **`/signup`**
 
 ```json
 {
@@ -66,11 +71,13 @@ Logo depois do usuário ser criado, um e-mail de boas vindas será enviado a ele
 ### E-mail de boas vindas:
 ![welcome_message](docs/images/welcomeMessage.PNG)
 
-# SignIn
+## SignIn
 
-| Rota          | Método     |
-|---------------|------------|
-| **`/signin`** | **`POST`** |
+Fazer login na conta para receber um token de acesso.
+
+| Rota          | Método     | Autenticação |
+|---------------|------------|--------------|
+| **`/signin`** | **`POST`** | **`NÃO`**    |
 
 
 **Parâmetros obrigatórios**
@@ -81,6 +88,8 @@ Logo depois do usuário ser criado, um e-mail de boas vindas será enviado a ele
 | **`password`** | **`string`** | body  | Senha do usuário  |
 
 **Exemplo de requisição**
+
+**`POST`** **`/signin`**
 
 ```json
 {
@@ -107,3 +116,202 @@ Logo depois do usuário ser criado, um e-mail de boas vindas será enviado a ele
 	"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRmMmJkZjk0LTY0MzgtNDQ5NS1hM2ZiLTFiNmYyYWRiYTBkZiIsImlhdCI6MTY1MTUzNDA3MiwiZXhwIjoxNjU0MTI2MDcyfQ.3R_OljyA4xgvnh0Dybk1x6mAYqvpyGCtW_9sXgLZSLg"
 }
 ```
+
+O **`accessToken`** tem validade de `24 horas`, enquanto o **`refreshToken`** tem validade de `30 dias`.
+
+## Refresh Token
+
+Pedir um novo token de acesso para aplicação.
+
+| Rota                 | Método     | Autenticação |
+|----------------------|------------|--------------|
+| **`/refresh-token`** | **`POST`** | **`NÃO`**    |
+
+**Parâmetros obrigatórios**
+
+| Campo              | Tipo         | Local | Descrição                     |
+|--------------------|--------------|-------|-------------------------------|
+| **`refreshToken`** | **`string`** | body  | Refresh Token recebido da API |
+
+Existe um **`Rate Limit`** para essa rota, é possível fazer apenas `1` requisição por `minuto`.
+
+**Exemplo de requisição**
+
+**`POST`** **`/refresh-token`**
+
+```json
+{
+	"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMwZmExYTNmLWMzOTYtNDkxYS04M2E5LTcxNzk3MGI5MzIyMSIsImlhdCI6MTY1MTU5NTA0NSwiZXhwIjoxNjU0MTg3MDQ1fQ.KQ4R4trB_yAKdrzBMc8hKROgKGjM2ISEATIDwlUjrq8"
+}
+```
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+```json
+{
+	"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ0MzA0MGE4LWJkMzgtNDhhOS04MjA5LTY0ZDYxMzk2Y2M0ZiIsImlhdCI6MTY1MTg4NjMwNSwiZXhwIjoxNjUxOTcyNzA1fQ.co8v8jnDHp5LKQqFVRgWcNMpZ1lbqMNTiIipuuekipk",
+	"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ0MzA0MGE4LWJkMzgtNDhhOS04MjA5LTY0ZDYxMzk2Y2M0ZiIsImlhdCI6MTY1MTg4NjMwNSwiZXhwIjoxNjU0NDc4MzA1fQ.G1VYQ90jNbdZwR2Kt3HOjwv-HfFXs6OiALEoLlpV4t4"
+}
+```
+---
+# Recuperção de senha
+
+## Check if the email exists
+
+Checar se o e-mail está cadastrado na aplicação, para que seja possível enviar um e-mail de verificação ao usuário.
+
+| Rota                | Método    | Autenticação |
+|---------------------|-----------|--------------|
+| **`/email-exists`** | **`GET`** | **`NÃO`**    |
+
+**Parâmetros obrigatórios**
+
+| Campo       | Tipo         | Local | Descrição                            |
+|-------------|--------------|-------|--------------------------------------|
+| **`email`** | **`string`** | query | E-mail do usuário para a verificação |
+
+**Exemplo de requisição**
+
+**`GET`** **`/email-exists?email=felipedasr%40email.com`**
+
+**`Query`**
+```json
+{
+	"email": "felipedasr@email.com"
+}
+```
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+O retorno será um valor booleano dentro do campo `exists`, informando se existe ou não.
+
+```json
+{
+	"exists": true
+}
+```
+
+## Forgot Password
+
+Enviar e-mail para o usuário com um código, para que ele consiga recuperar sua senha.
+
+| Rota                   | Método     | Autenticação |
+|------------------------|------------|--------------|
+| **`/forgot-password`** | **`POST`** | **`NÃO`**    |
+
+**Parâmetros obrigatórios**
+
+| Campo       | Tipo         | Local | Descrição                                     |
+|-------------|--------------|-------|-----------------------------------------------|
+| **`email`** | **`string`** | body  | E-mail do usuário para a recuperação da conta |
+
+**Exemplo de requisição**
+
+**`POST`** **`/forgot-password`**
+
+```json
+{
+	"email": "felipedasr@email.com"
+}
+```
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+```json
+{
+	"message": "Success, an email with the verification code, has been sent to: felipedasr@email.com"
+}
+```
+
+Logo após a requisição ser enviada, um e-mail será mandado ao e-mail para que o usuário possa pegar o código de recuperação.
+
+#### E-mail de recuperação da senha
+
+![forgot_password_email](docs/images/forgotPassword.PNG)
+
+</br>
+
+## Check that the password reset code is correct
+
+Rota para checar se o código de recuperação de senha está correto.
+
+| Rota                                  | Método    | Autenticação |
+|---------------------------------------|-----------|--------------|
+| **`/password-reset-code/is-correct`** | **`GET`** | **`NÃO`**    |
+
+**Parâmetros obrigatórios**
+
+| Campo       | Tipo         | Local | Descrição                                     |
+|-------------|--------------|-------|-----------------------------------------------|
+| **`email`** | **`string`** | query | E-mail do usuário para a recuperação da conta |
+| **`code`**  | **`string`** | query | Código recebido no e-mail                     |
+
+**Exemplo de requisição**
+
+**`GET`** **`/password-reset-code/is-correct?email=felipedasr%40email.com&code=53454`**
+
+**`Query`**
+```json
+{
+	"email": "felipedasr@email.com",
+	"code": "53454"
+}
+```
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+O retorno será um valor booleano dentro do campo `isCorrect`, informando se o código é correto ou não.
+
+```json
+{
+	"isCorrect": true
+}
+```
+
+## Change Password
+
+Alterar a senha do usuário.
+
+| Rota                   | Método     | Autenticação |
+|------------------------|------------|--------------|
+| **`/change-password`** | **`POST`** | **`NÃO`**    |
+
+**Parâmetros obrigatórios**
+
+| Campo             | Tipo         | Local | Descrição                                     |
+|-------------------|--------------|-------|-----------------------------------------------|
+| **`email`**       | **`string`** | body | E-mail do usuário para a recuperação da conta |
+| **`code`**        | **`string`** | body | Código recebido no e-mail                     |
+| **`newPassword`** | **`string`** | body | Nova senha                                    |
+
+**Exemplo de requisição**
+
+**`POST`** **`/change-password`**
+
+```json
+{
+	"email": "felipedasr@email.com",
+	"code": "53454",
+	"newPassword": "newStrongPassword"
+}
+```
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+```json
+{
+	"message": "Successful password change"
+}
+```
+
+---
