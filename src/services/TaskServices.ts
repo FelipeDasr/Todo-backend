@@ -257,7 +257,7 @@ class TaskServices {
             });
 
             // Date limit
-            const dateNow = moment().subtract(1, 'day').endOf('day');
+            const dateNow = moment();
 
             // Count all imcomplete tasks
             const incompleteTasks = await this.taskRepository.count({
@@ -266,15 +266,15 @@ class TaskServices {
                 dueDate: LessThan(dateNow.toDate())
             });
 
-            const percentageOfCompletedTasks = (completedTasks * 100) / allTasks;
-            const percentageOfIncompleteTasks = (incompleteTasks * 100) / allTasks;
+            const perOfCompletedTasks = (completedTasks * 100) / allTasks;
+            const perOfIncompleteTasks = (incompleteTasks * 100) / allTasks;
 
             return {
                 tasks: allTasks,
                 completedTasks,
                 incompleteTasks,
-                percentageOfCompletedTasks,
-                percentageOfIncompleteTasks
+                percentageOfCompletedTasks: perOfCompletedTasks ? perOfCompletedTasks : 0,
+                percentageOfIncompleteTasks: perOfIncompleteTasks ? perOfIncompleteTasks : 0
             }
         }
         catch (e) {
