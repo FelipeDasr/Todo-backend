@@ -10,6 +10,33 @@
 
 Aplicação feita em typescript, com o objetivo de demonstrar minhas habilidades com TS. Essa API REST é capaz de armazenar tarefas de cada usuário individualmente, fazendo possível agendar e visualizar objetivos diariamente, semanalmente e mensalmente. A aplicação é um CRUD em si, capaz de criar, consultar, alterar e deletar dados. Feita utilizando boas práticas e tecnologias muito usadas hoje em dia.
 
+### Todo endpoints
+
+- **Autenticação**
+	- [**Criar conta**](#signup)
+	- [**Fazer Login**](#signin)
+	- [**Obter novo token de acesso**](#refresh-token)
+</br>
+
+- **Usuário**
+	- [**Obter informações**](#get-user-info)
+	- [**Deletar**](#delete-user)
+</br>
+
+- **Tarefas**
+	- **Manipulação**
+		- [**Criar nova tarefa**](#new-task)
+		- [**Atualizar tarefa**](#update-task)
+		- [**Deletar tarefa**](#delete-task)
+		</br>
+
+	- **Consultas**
+		- [**Por ID**](#get-task-by-id)
+		- [**Por dia**](#get-tasks-of-the-day)
+		- [**Por mês**](#get-tasks-of-the-month)
+		- [**Por ano**](#get-tasks-of-the-year)
+		- [**Estatisticas**](#get-tasks-statistics)
+
 # Iniciando
     > npm start
 
@@ -705,3 +732,69 @@ Exluir um task.
 }
 ```
 ---
+
+# Usuário
+
+## Get user info
+
+Pegar informações sobre o usuário.
+
+| Rota        | Método    | Autenticação |
+|-------------|-----------|--------------|
+| **`/user`** | **`GET`** | **`SIM`**    |
+
+**Exemplo de requisição**
+
+**`GET`** **`/user`**
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+```json
+{
+	"user": {
+		"id": "4f2bdf94-6438-4495-a3fb-1b6f2adba0df",
+		"firstname": "Felipe",
+		"lastname": "Dasr",
+		"email": "felipedasr@email.com",
+		"createdAt": "2022-04-28T23:48:14.491Z",
+		"updatedAt": "2022-04-28T23:48:14.491Z"
+	},
+	"tasksStats": {
+		"tasks": 6,
+		"completedTasks": 2,
+		"lateTasks": 0,
+		"percentageOfCompletedTasks": 33.333333333333336,
+		"percentageOfLateTasks": 0
+	}
+}
+```
+
+## Delete user
+
+| Rota        | Método       | Autenticação |
+|-------------|--------------|--------------|
+| **`/user`** | **`DELETE`** | **`SIM`**    |
+
+**Exemplo de requisição**
+
+**`DELETE`** **`/user`**
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+```json
+{
+	"deletedUser": {
+		"id": "4f2bdf94-6438-4495-a3fb-1b6f2adba0df",
+		"firstname": "Felipe",
+		"lastname": "Dasr",
+		"email": "felipedasr@email.com",
+		"createdAt": "2022-04-28T23:48:14.491Z",
+		"updatedAt": "2022-04-28T23:48:14.491Z"
+	},
+	"deletedTasks": 6
+}
+```
