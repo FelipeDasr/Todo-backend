@@ -28,7 +28,7 @@ class TaskValidator extends Validator {
     }
 
     public date(data: any): { date: Date } | ValidationError {
-        return this.validate(data, 'required', { date: Joi.date() });
+        return this.validate(data, 'optional', { date: Joi.date().default(new Date()) });
     }
 
     //
