@@ -220,7 +220,10 @@ class TaskServices {
                     user: user.id,
                     ...doneQuery
                 },
-                order: query.priorityOrder ? { priority: query.priorityOrder } : { dueDate: 'ASC' },
+                order: {
+                    dueDate: query.dueDateOrder,
+                    priority: query.priorityOrder,
+                },
                 take: perPage, skip: offset,
             });
             //
