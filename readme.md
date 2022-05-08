@@ -5,7 +5,7 @@
   <img alt="NodeJS badge" src="https://img.shields.io/badge/Node.js-90C53F?style=for-the-badge&logo=node.js&logoColor=white"/>
   <img alt="API badge" src="https://img.shields.io/badge/API%20REST-E64D80?style=for-the-badge" />
   <img alt="ExpressJS badge" src="https://img.shields.io/badge/Express.js-333331?style=for-the-badge" />
-  <img alt="TypeORM badge" src="https://img.shields.io/badge/TYPEORM-FFAB00?style=for-the-badge" />
+  <img alt="TypeORM badge" src="https://img.shields.io/badge/TYPEORM-DD3222?style=for-the-badge" />
 </div></br>
 
 Aplicação feita em typescript, com o objetivo de demonstrar minhas habilidades com TS. Essa API REST é capaz de armazenar tarefas de cada usuário individualmente, fazendo possível agendar e visualizar objetivos diariamente, semanalmente e mensalmente. A aplicação é um CRUD em si, capaz de criar, consultar, alterar e deletar dados. Feita utilizando boas práticas e tecnologias muito usadas hoje em dia.
@@ -288,9 +288,9 @@ Alterar a senha do usuário.
 
 | Campo             | Tipo         | Local | Descrição                                     |
 |-------------------|--------------|-------|-----------------------------------------------|
-| **`email`**       | **`string`** | body | E-mail do usuário para a recuperação da conta |
-| **`code`**        | **`string`** | body | Código recebido no e-mail                     |
-| **`newPassword`** | **`string`** | body | Nova senha                                    |
+| **`email`**       | **`string`** | body  | E-mail do usuário para a recuperação da conta |
+| **`code`**        | **`string`** | body  | Código recebido no e-mail                     |
+| **`newPassword`** | **`string`** | body  | Nova senha                                    |
 
 **Exemplo de requisição**
 
@@ -314,4 +314,394 @@ Alterar a senha do usuário.
 }
 ```
 
+---
+
+# Tarefas
+
+## New Task
+
+Criar uma nova tarefa.
+
+| Rota        | Método     | Autenticação |
+|-------------|------------|--------------|
+| **`/task`** | **`POST`** | **`SIM`**    |
+
+**Parâmetros**
+
+| Campo             | Tipo         | Local | Descrição                               | Obrigatório | Default |
+|-------------------|--------------|-------|-----------------------------------------|-------------|---------|
+| **`title`**       | **`string`** | body  | Título da tarefa                        | **`SIM`**   |         |
+| **`description`** | **`string`** | body  | Descrição sobre a terefa                | **`NÃO`**   | `NULL`  |
+| **`priority`**    | **`string`** | body  | Prioridade da tarefa                    | **`NÃO`**   | `1`     |
+| **`dueDate`**     | **`Date`**   | body  | Até quando a tarefa deverá estar pronta | **`SIM`**   |         |
+| **`done`**        | **`string`** | body  | Se foi concluida ou não                 | **`NÃO`**   | `false` |
+
+A prioridade é dividida em 3.
+
+**`LOW` `1`**, **`MEDIUM` `2`** e **`HIGHT` `3`**
+
+</br>
+
+**Exemplo de requisição**
+
+**`POST`** **`/task`**
+
+```json
+{
+	"title": "My first task",
+	"description": "This is my first task.",
+	"dueDate": "2022-06-03T00:00:00.000Z"
+}
+```
+
+**Resposta de sucesso**
+
+**Código**: **`201 CREATED`**
+
+```json
+{
+	"taskId": "f5457a7b-998a-4963-a7b9-d6585da7cbcb",
+	"title": "My first task",
+	"description": "This is my first task.",
+	"priority": 1,
+	"done": false,
+	"dueDate": "2022-06-03T00:00:00.000Z",
+	"createdAt": "2022-05-07T19:27:08.743Z",
+	"updatedAt": "2022-05-07T19:27:08.743Z"
+}
+```
+
+## Get task by id
+
+Obter um tarefa pelo ID.
+
+| Rota                | Método    | Autenticação |
+|---------------------|-----------|--------------|
+| **`/task/:taskId`** | **`GET`** | **`SIM`**    |
+
+**Parâmetros obrigatórios**
+
+| Campo         | Tipo              | Local | Descrição    |
+|---------------|-------------------|-------|--------------|
+| **`:taskId`** | **`UUID string`** | url   | Id da tarefa |
+
+**Exemplo de requisição**
+
+**`GET`** **`/task/f5457a7b-998a-4963-a7b9-d6585da7cbcb`**
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+```json
+{
+	"taskId": "f5457a7b-998a-4963-a7b9-d6585da7cbcb",
+	"title": "My first task",
+	"description": "This is my first task.",
+	"priority": 1,
+	"done": false,
+	"dueDate": "2022-06-03T00:00:00.000Z",
+	"createdAt": "2022-05-07T19:27:08.743Z",
+	"updatedAt": "2022-05-07T19:27:08.743Z"
+}
+```
+
+## Query parameters
+
+Parâmetros opcionais, que podem ser incluidas nas consultas.
+
+**Parâmetros (Opcionais)**
+
+| Campo                 | Tipo          | Local | Descrição                        | default      |
+|-----------------------|---------------|-------|----------------------------------|--------------|
+| **`priorityOrder`**   | **`string`**  | query | Ordenaão por prioridade          | `ASC`        |
+| **`onlyIncompleted`** | **`boolean`** | query | Pegar apenas tarefas incompletas | `false`      |
+| **`limit`**           | **`integer`** | query | Limite por página                | `50`         |
+| **`page`**            | **`integer`** | query | Pagina dos dados                 | `1`          |
+| **`date`**            | **`Date`**    | query | Data                             | `New Date()` |
+
+As ordenações possuem 2 valores `ASC` e `DESC`.
+
+## Get tasks of the day
+
+Pegar tarefas do dia atual, ou de o outro dia, porém para pegar de outro dia, o parâmetro `date` deverá ser enviado.
+
+| Rota                    | Método    | Autenticação |
+|-------------------------|-----------|--------------|
+| **`/tasks_of_the_day`** | **`GET`** | **`SIM`**    |
+
+**Exemplo de requisição**
+
+**`GET`** **`/tasks_of_the_day?date=2022-06-03`**
+
+**`Query`**
+```json
+{
+	"date": "2022-06-03T00:00:00.000Z"
+}
+```
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+```json
+{
+	"tasks": [
+		{
+			"taskId": "426c7687-d532-4cb1-8e70-45b1efe19e34",
+			"title": "My second task",
+			"description": "This is my second task",
+			"priority": 1,
+			"done": false,
+			"dueDate": "2022-06-03T00:00:00.000Z",
+			"createdAt": "2022-05-08T02:33:00.868Z",
+			"updatedAt": "2022-05-08T02:33:00.868Z"
+		},
+		{
+			"taskId": "f5457a7b-998a-4963-a7b9-d6585da7cbcb",
+			"title": "My first task",
+			"description": "This is my first task.",
+			"priority": 1,
+			"done": false,
+			"dueDate": "2022-06-03T00:00:00.000Z",
+			"createdAt": "2022-05-07T19:27:08.743Z",
+			"updatedAt": "2022-05-07T19:27:08.743Z"
+		}
+	],
+	"totalRecords": 2
+}
+```
+
+## Get tasks of the month
+
+Pegar tarefas do mês atual, ou de o outro mês, porém para pegar de outro mês, o parâmetro `date` deverá ser enviado.
+
+| Rota                      | Método    | Autenticação |
+|---------------------------|-----------|--------------|
+| **`/tasks_of_the_month`** | **`GET`** | **`SIM`**    |
+
+**Exemplo de requisição**
+
+**`GET`** **`/tasks_of_the_month?date=2022-05-02`**
+
+**`Query`**
+```json
+{
+	"date": "2022-05-10T00:00:00.000Z"
+}
+```
+
+**Resposta de requisição**
+
+**Código**: **`200 OK`**
+
+Dentro do campo tasks contem os dias e suas tarefas.
+
+```json
+{
+	"tasks": {
+		"2022-05-08": [
+			{
+				"taskId": "d81fd45f-2b6c-4686-a89b-2bf93fdfc682",
+				"title": "My task -1",
+				"description": "This is task -1.",
+				"priority": 1,
+				"done": false,
+				"dueDate": "2022-05-09T00:00:00.000Z",
+				"createdAt": "2022-05-08T01:23:15.749Z",
+				"updatedAt": "2022-05-08T01:23:15.749Z"
+			}
+		]
+	},
+	"totalRecords": 1
+}
+```
+
+## Get tasks of the year
+
+Pegar tarefas do ano atual, ou de o outro ano, porém para pegar de outro ano, o parâmetro `date` deverá ser enviado.
+
+| Rota                     | Método    | Autenticação |
+|--------------------------|-----------|--------------|
+| **`/tasks_of_the_year`** | **`GET`** | **`SIM`**    |
+
+**Parâmetro opcional**
+| Campo           | Tipo          | Local | Descrição                                    | Defaut  |
+|-----------------|---------------|-------|----------------------------------------------|---------|
+| **`pastTasks`** | **`boolean`** | query | Pegar tarefas anteriores da data da consulta | `false` |
+
+**Exemplo de requisição**
+
+**`GET`** **`/tasks_of_the_year?date=2022-01-02&pastTasks=true&limit=10`**
+
+**`Query`**
+```json
+{
+    "date": "2022-01-04T01:23:15.749Z",
+    "pastTasks": true,
+    "limit": 10
+}
+```
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+Dentro do campo `tasks` contem os meses, dentro dos meses os dias e suas tarefas respectivamente.
+
+```json
+{
+	"tasks": {
+		"4": {
+			"2022-05-08": [
+				{
+					"taskId": "d81fd45f-2b6c-4686-a89b-2bf93fdfc682",
+					"title": "My task -1",
+					"description": "This is task -1.",
+					"priority": 1,
+					"done": false,
+					"dueDate": "2022-05-09T00:00:00.000Z",
+					"createdAt": "2022-05-08T01:23:15.749Z",
+					"updatedAt": "2022-05-08T01:23:15.749Z"
+				}
+			]
+		},
+		"5": {
+			"2022-06-06": [
+				{
+					"taskId": "0cea1916-bfbb-4fc7-8597-cf6f908ac589",
+					"title": "My task 2",
+					"description": "This is my task 2.",
+					"priority": 1,
+					"done": false,
+					"dueDate": "2022-06-07T00:00:00.000Z",
+					"createdAt": "2022-05-07T19:35:48.359Z",
+					"updatedAt": "2022-05-08T01:04:33.652Z"
+				}
+			],
+			"2022-06-04": [
+				{
+					"taskId": "62185d91-c479-497f-9989-d9615eb5c166",
+					"title": "My task 3",
+					"description": "This is my task 1.5.",
+					"priority": 2,
+					"done": false,
+					"dueDate": "2022-06-05T00:00:00.000Z",
+					"createdAt": "2022-05-07T19:35:57.338Z",
+					"updatedAt": "2022-05-08T01:04:33.656Z"
+				}
+			],
+			"2022-06-02": [
+				{
+					"taskId": "f5457a7b-998a-4963-a7b9-d6585da7cbcb",
+					"title": "My first task",
+					"description": "This is my first task.",
+					"priority": 1,
+					"done": false,
+					"dueDate": "2022-06-03T00:00:00.000Z",
+					"createdAt": "2022-05-07T19:27:08.743Z",
+					"updatedAt": "2022-05-07T19:27:08.743Z"
+				}
+			]
+		}
+	},
+	"totalRecords": 4
+}
+```
+
+## Get tasks statistics
+
+Pegar uma visão geral sobre as tarefas.
+
+| Rota                       | Método    | Autenticação |
+|----------------------------|-----------|--------------|
+| **`/task/delete/:taskId`** | **`GET`** | **`SIM`**    |
+
+**Exemplo de requisição**
+
+**`GET`** **`/tasks-stats`**
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+```json
+{
+	"tasks": 6,
+	"completedTasks": 2,
+	"lateTasks": 0,
+	"percentageOfCompletedTasks": 33.333333333333336,
+	"percentageOfLateTasks": 0
+}
+```
+
+## Update task
+
+Atualizar tarefa.
+
+| Rota               | Método      | Autenticação |
+|--------------------|-------------|--------------|
+| **`/task/update`** | **`PATCH`** | **`SIM`**    |
+
+**Parâmetros**
+
+| Campo             | Tipo              | Local | Descrição                               | Obrigatório |
+|-------------------|-------------------|-------|-----------------------------------------|-------------|
+| **`taskId`**      | **`UUID string`** | body  | Id da tarefa                            | **`SIM`**   |
+| **`title`**       | **`string`**      | body  | Título da tarefa                        | **`NÃO`**   |
+| **`description`** | **`string`**      | body  | Descrição sobre a terefa                | **`NÃO`**   |
+| **`priority`**    | **`string`**      | body  | Prioridade da tarefa                    | **`NÃO`**   |
+| **`dueDate`**     | **`Date`**        | body  | Até quando a tarefa deverá estar pronta | **`NÃO`**   |
+| **`done`**        | **`string`**      | body  | Se foi concluida ou não                 | **`NÃO`**   |
+
+**Exemplo de requisição**
+
+**`PATCH`** **`/task/update`**
+
+```json
+{
+	"taskId": "d81fd45f-2b6c-4686-a89b-2bf93fdfc682",
+	"description": "This is task -1. (DONE)",
+	"done": true
+}
+```
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+```json
+{
+	"message": "Successful task update"
+}
+```
+
+## Delete task
+
+Exluir um task.
+
+| Rota               | Método    | Autenticação |
+|--------------------|-----------|--------------|
+| **`/tasks-stats`** | **`GET`** | **`SIM`**    |
+
+**Parâmetro obrigatório**
+
+| Campo        | Tipo              | Local | Descrição    |
+|--------------|-------------------|-------|--------------|
+| **`taskId`** | **`UUID string`** | body  | Id da tarefa |
+
+**Exemplo de requisição**
+
+**`DELETE`** **`/task/delete/426c7687-d532-4cb1-8e70-45b1efe19e34`**
+
+**Resposta de sucesso**
+
+**Código**: **`200 OK`**
+
+```json
+{
+	"message": "Successful task deletion"
+}
+```
 ---
