@@ -6,6 +6,7 @@ export interface IPagination {
 
 export interface ISimpleTaskQuery extends IPagination{
     priorityOrder?: 'ASC' | 'DESC';
+    dueDateOrder?: 'ASC' | 'DESC';
     onlyIncompleted?: boolean;
 }
 

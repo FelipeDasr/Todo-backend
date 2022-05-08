@@ -13,7 +13,8 @@ class QueryValidator extends Validator {
     constructor() {
         super();
         this.querySchema = {
-            priorityOrder: Joi.string().valid('ASC', 'DESC'),
+            priorityOrder: Joi.string().valid('ASC', 'DESC').default('ASC'),
+            dueDateOrder: Joi.string().valid('ASC', 'DESC').default('DESC'),
             onlyIncompleted: Joi.boolean().default(false),
             limit: Joi.number().integer().positive().default(50),
             page: Joi.number().integer().positive().default(1),
