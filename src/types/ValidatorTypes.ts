@@ -22,6 +22,7 @@ export interface ITaskSchema {
 
 export interface IQuerySchema {
     priorityOrder: Joi.StringSchema;
+    dueDateOrder: Joi.StringSchema;
     onlyIncompleted: Joi.BooleanSchema;
     limit: Joi.NumberSchema;
     page: Joi.NumberSchema;
