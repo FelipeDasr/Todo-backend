@@ -70,7 +70,7 @@ export interface ITaskResponseOrganizedByMonth extends ITotalRecords {
 export interface ITaskStatistics {
     tasks: number;
     completedTasks: number;
-    incompleteTasks: number;
+    lateTasks: number;
     percentageOfCompletedTasks: number;
-    percentageOfIncompleteTasks: number;
+    percentageOfLateTasks: number;
 }

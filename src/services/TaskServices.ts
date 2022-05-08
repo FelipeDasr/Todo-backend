@@ -265,21 +265,21 @@ class TaskServices {
             const dateNow = moment();
 
             // Count all imcomplete tasks
-            const incompleteTasks = await this.taskRepository.count({
+            const lateTasks = await this.taskRepository.count({
                 user,
                 done: false,
                 dueDate: LessThan(dateNow.toDate())
             });
 
             const perOfCompletedTasks = (completedTasks * 100) / allTasks;
-            const perOfIncompleteTasks = (incompleteTasks * 100) / allTasks;
+            const perOfLataTasks = (lateTasks * 100) / allTasks;
 
             return {
                 tasks: allTasks,
                 completedTasks,
-                incompleteTasks,
+                lateTasks,
                 percentageOfCompletedTasks: perOfCompletedTasks ? perOfCompletedTasks : 0,
-                percentageOfIncompleteTasks: perOfIncompleteTasks ? perOfIncompleteTasks : 0
+                percentageOfLateTasks: perOfLataTasks ? perOfLataTasks : 0
             }
         }
         catch (e) {
