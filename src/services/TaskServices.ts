@@ -64,7 +64,7 @@ class TaskServices {
             // date limit 1: 07/10/2023 23:59:59
             // date limit 2: 09/10/2023 00:00:00
             const startDate = moment(date).subtract(1, 'day').endOf('day');
-            const limitDate = moment(date).add(1, 'day').startOf('day')
+            const limitDate = moment(date).add(1, 'day').startOf('day');
 
             const tasksResult = await this.getTaskByTimePeriod(
                 {
@@ -118,29 +118,31 @@ class TaskServices {
         }
     }
 
-    public async getTasksOfTheYear(taskInfo: ITaskUser, query: IQueryByYear): (
+    public async getTasksOfTheYear(taskInfo: ITaskDateAndUser, query: IQueryByYear): (
         Promise<ITaskResponseOrganizedByMonth | ServiceError>
     ) {
         try {
             // Set parameters
             let startDate: moment.Moment, limitDate: moment.Moment;
 
+            const { user, date } = taskInfo;
+
             if (query.pastTasks) {
                 // Full year
-                startDate = moment().subtract(1, 'year').endOf('year');
-                limitDate = moment().add(1, 'year').startOf('year');
+                startDate = moment(date).subtract(1, 'year').endOf('year');
+                limitDate = moment(date).add(1, 'year').startOf('year');
             }
             else {
                 // From now on
-                startDate = moment().subtract(1, 'day').endOf('day');
-                limitDate = moment().add(1, 'year').startOf('year');
+                startDate = moment(date).subtract(1, 'day').endOf('day');
+                limitDate = moment(date).add(1, 'year').startOf('year');
             }
 
             const tasksResult = await this.getTaskByTimePeriod(
                 {
                     startDate: startDate.toDate(),
                     limitDate: limitDate.toDate(),
-                    user: taskInfo.user
+                    user
                 },
                 query
             );

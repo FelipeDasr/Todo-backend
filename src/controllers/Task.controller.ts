@@ -85,15 +85,19 @@ class TaskController {
     public async getTasksOfTheYear(req: Request, res: Response) {
         // Data validation
         const queryValue = QueryValidator.queryByYear(req.query); // Filters validation
+        const dateValue = TaskValidator.date(req.query);
 
         // Checks the validation result
         if (queryValue instanceof ValidationError)
             return res.status(422).json({ errors: queryValue.errors });
+        if (dateValue instanceof ValidationError)
+            return res.status(422).json({ errors: dateValue.errors });
 
         // Get data
         const user = res.locals.user; // Get user
+        const date = dateValue.date;
 
-        const tasksResult = await TaskServices.getTasksOfTheYear({ user }, queryValue);
+        const tasksResult = await TaskServices.getTasksOfTheYear({ user, date }, queryValue);
 
         // Checks errors
         if (tasksResult instanceof ServiceError) {
